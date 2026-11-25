@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ДЕЛО № 2026-БУХ</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Georgia',serif}
+body{background:#12121f;color:#e8e0c8;min-height:100vh;padding:16px}
+.wrap{max-width:720px;margin:0 auto}
+.screen{display:none;animation:fade .4s}
+.screen.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+h1{font-size:1.9em;text-align:center;color:#d4af37;letter-spacing:2px;margin:14px 0 4px}
+.sub{text-align:center;color:#8a8a9e;font-style:italic;margin-bottom:18px}
+h2{color:#d4af37;margin:16px 0 10px}
+.card{background:#1c1c30;border:1px solid #3a3a58;border-radius:12px;padding:16px;margin:12px 0;box-shadow:0 4px 14px rgba(0,0,0,.4)}
+.doc{background:#f5f0e1;color:#2a2a2a;border-radius:8px;padding:14px;margin:10px 0;font-size:.95em;line-height:1.5}
+.doc b{color:#7a1f1f}
+.btn{display:inline-block;background:linear-gradient(135deg,#d4af37,#a67c1e);color:#1a1a2e;font-weight:bold;border:none;border-radius:8px;padding:12px 22px;font-size:1em;cursor:pointer;margin:6px 4px;transition:.2s;font-family:inherit}
+.btn:hover{transform:translateY(-2px);box-shadow:0 4px 10px rgba(212,175,55,.35)}
+.btn.dark{background:#2e2e4a;color:#e8e0c8;border:1px solid #4a4a6e}
+.btn.red{background:linear-gradient(135deg,#c0392b,#7a1f1f);color:#fff}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+input[type=text],input[type=number],textarea,select{width:100%;background:#26263e;border:1px solid #4a4a6e;color:#e8e0c8;border-radius:8px;padding:10px;font-size:1em;margin:6px 0;font-family:inherit}
+textarea{min-height:60px;resize:vertical}
+label{display:block;color:#b8b090;margin-top:10px;font-size:.95em}
+.folder{display:block;background:#1c1c30;border:1px solid #3a3a58;border-left:5px solid #d4af37;border-radius:10px;padding:14px;margin:12px 0;cursor:pointer;font-size:1.1em;transition:.2s}
+.folder:hover{background:#26264a;transform:translateX(6px)}
+.folder .ic{font-size:1.6em;margin-right:8px}
+.counter{background:#2a1a1a;border:1px solid #7a1f1f;border-radius:8px;padding:8px 14px;display:inline-block;margin:8px 0}
+.evidence{display:none;background:#2a2a10;border:1px dashed #d4af37;border-radius:8px;padding:8px 12px;margin-top:6px}
+.evidence.show{display:block}
+.hint{color:#e07a7a;font-size:.9em;margin-top:6px;display:none}
+.hint.show{display:block}
+.ok{color:#7ec87e;font-size:.9em}
+.stamp{display:none;font-size:2em;color:#7a1f1f;border:4px double #7a1f1f;border-radius:8px;padding:6px 18px;transform:rotate(-6deg);margin:14px auto;width:max-content;background:rgba(212,175,55,.15)}
+.stamp.show{display:block;animation:stampIn .4s}
+@keyframes stampIn{from{transform:rotate(-6deg) scale(2);opacity:0}to{transform:rotate(-6deg) scale(1);opacity:1}}
+.timer{font-size:2.2em;text-align:center;color:#d4af37;margin:12px 0}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:10;align-items:center;justify-content:center;padding:20px}
+.modal.show{display:flex}
+.modal .card{max-width:560px;max-height:85vh;overflow-y:auto}
+.verdicts-list{background:#1a1a2c;border:1px solid #3a3a58;border-radius:8px;padding:10px;margin-top:10px;max-height:260px;overflow-y:auto}
+.vrow{border-bottom:1px solid #2a2a44;padding:8px 4px;font-size:.92em}
+.vrow b{color:#d4af37}
+.pill{padding:10px 18px;border-radius:20px;border:2px solid #4a4a6e;background:transparent;color:#e8e0c8;cursor:pointer;margin:4px;font-family:inherit;font-size:.95em}
+.pill.sel{border-color:#d4af37;background:#3a3020;color:#d4af37;font-weight:bold}
+.small{font-size:.85em;color:#8a8a9e}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ЭКРАН: ТИТУЛ -->
+<div id="scr-title" class="screen active">
+  <h1>ДЕЛО № 2026-БУХ</h1>
+  <p class="sub">«Дело о скрытых расходах» — финансовый детектив</p>
+  <div class="card">
+    <p><b>Завязка.</b> В небольшой торговой фирме во Владивостоке произошла утечка бюджета. Директор в панике: расходы на учёт выросли, а прибыль тает.</p>
+    <p style="margin-top:8px">Под подозрением два варианта: <b>новый штатный бухгалтер</b> (Анна Петрова) и <b>аутсорсинговая компания «1С:Форус»</b>. Директор подозревает, что в расчётах есть скрытые утечки денег.</p>
+    <p style="margin-top:8px">Ваша задача: выступить в роли финансового детектива, изучить документы, рассчитать полную стоимость каждого варианта и найти, где закралась ошибка.</p>
+  </div>
+  <div style="text-align:center">
+    <button class="btn dark" onclick="showRules()">📋 Правила для всех</button>
+    <button class="btn" onclick="show('scr-folders')">Открыть папку дела ➔</button>
+  </div>
+</div>
+
+<!-- ЭКРАН: ВЫБОР ПАПКИ -->
+<div id="scr-folders" class="screen">
+  <h2>Выберите свою папку расследования</h2>
+  <div class="folder" onclick="openFolder('shtat')"><span class="ic">📁</span><b>Папка № 1 — адвокаты «ШТАТ»</b><br><span class="small">Собираете улики против аутсорсинга: взносы, полная стоимость, лицензия 1С. Готовите 3 аргумента в защиту штатного бухгалтера.</span></div>
+  <div class="folder" onclick="openFolder('out')"><span class="ic">📁</span><b>Папка № 2 — адвокаты «АУТСОРСИНГ»</b><br><span class="small">Собираете улики против штата: тариф и скрытые платежи, пункт договора об ответственности. Готовите 3 аргумента за аутсорсинг.</span></div>
+  <div class="folder" onclick="openFolder('jury')"><span class="ic">📁</span><b>Папка № 3 — присяжные</b><br><span class="small">Изучаете материалы дела и заготавливаете 3 каверзных вопроса для адвокатов обеих сторон.</span></div>
+  <button class="btn dark" onclick="show('scr-title')">⬅ Назад к делу</button>
+</div>
+
+<!-- ЭКРАН: ПАПКА ШТАТ -->
+<div id="scr-shtat" class="screen">
+  <h2>📁 Папка № 1 — адвокаты «ШТАТ»</h2>
+  <div class="counter">Улик найдено: <span id="shtat-cnt">0</span> / 3</div>
+
+  <div class="card"><b>Улика 1. Страховые взносы.</b> Оклад бухгалтера — 120 000 руб./мес. Ставка страховых взносов — 30,2%. Сколько фирма платит взносов сверх оклада? (только цифры)
+    <input type="number" id="ev-s1" placeholder="Ответ в рублях"><button class="btn" onclick="checkNum('s1',36240,'Верно! Взносы = 120 000 × 0,302 = 36 240 руб.')">Проверить</button>
+    <div class="hint" id="h-s1">Директор тоже так считал... Возьмите оклад и умножьте на 0,302.</div>
+    <div class="evidence" id="e-s1">📌 <b>Улика изъята:</b> страховые взносы — 36 240 руб./мес. сверх оклада!</div>
+  </div>
+
+  <div class="card"><b>Улика 2. Полная стоимость.</b> Оклад 120 000 + взносы (вы их уже знаете) + амортизация рабочего места 3 000 руб./мес. Какова полная стоимость штатного бухгалтера в месяц? (только цифры)
+    <input type="number" id="ev-s2" placeholder="Ответ в рублях"><button class="btn" onclick="checkNum('s2',159240,'Точно! Полная стоимость — 159 240 руб./мес.')">Проверить</button>
+    <div class="hint" id="h-s2">Сложите: 120 000 + 36 240 + 3 000.</div>
+    <div class="evidence" id="e-s2">📌 <b>Улика изъята:</b> штатный бухгалтер обходится в 159 240 руб./мес!</div>
+  </div>
+
+  <div class="card"><b>Улика 3. Лицензия 1С.</b> Директор нашёл чек: лицензия 1С для штатного бухгалтера стоит 30 000 руб. в год. Сколько это в месяц? (только цифры)
+    <input type="number" id="ev-s3" placeholder="Ответ в рублях"><button class="btn" onclick="checkNum('s3',2500,'Верно! 30 000 / 12 = 2 500 руб./мес.')">Проверить</button>
+    <div class="hint" id="h-s3">Разделите 30 000 на 12 месяцев.</div>
+    <div class="evidence" id="e-s3">📌 <b>Улика изъята:</b> лицензия 1С — ещё 2 500 руб./мес. к штату!</div>
+  </div>
+
+  <div class="card"><b>Подготовка к защите.</b> Запишите 3 аргумента в пользу штата.</div>
+  <label>Аргумент 1</label><textarea id="arg-s1" placeholder="Например: бухгалтер всегда под рукой и знает фирму до мелочей"></textarea>
+  <label>Аргумент 2</label><textarea id="arg-s2" placeholder="Например: за ошибки отвечает лично, вплоть до увольнения"></textarea>
+  <label>Аргумент 3</label><textarea id="arg-s3" placeholder="Например: конфиденциальность зарплат и сделок"></textarea>
+
+  <button class="btn" onclick="goToCourt('shtat')">⚖ В зал суда</button>
+  <button class="btn dark" onclick="show('scr-folders')">⬅ К папкам</button>
+</div>
+
+<!-- ЭКРАН: ПАПКА АУТСОРСИНГ -->
+<div id="scr-out" class="screen">
+  <h2>📁 Папка № 2 — адвокаты «АУТСОРСИНГ»</h2>
+  <div class="counter">Улик найдено: <span id="out-cnt">0</span> / 2</div>
+
+  <div class="card"><b>Улика 1. Полная стоимость аутсорсинга.</b> Тариф «1С:БухОбслуживание Форус»: абонентский тариф 8 900 руб./мес + электронная подпись 1 500 руб./мес + оплата вашего времени на контроль аутсорсера 2 000 руб./мес. Полная стоимость? (только цифры)
+    <input type="number" id="ev-o1" placeholder="Ответ в рублях"><button class="btn" onclick="checkNum('o1',12400,'Верно! Полная стоимость — 12 400 руб./мес.')">Проверить</button>
+    <div class="hint" id="h-o1">Сложите все три платежа: 8 900 + 1 500 + 2 000.</div>
+    <div class="evidence" id="e-o1">📌 <b>Улика изъята:</b> аутсорсинг стоит всего 12 400 руб./мес!</div>
+  </div>
+
+  <div class="card"><b>Улика 2. Пункт 4.2 договора.</b> Прочитайте пункт договора и ответьте: кто по договору несёт ответственность за ошибки в отчётности?
+    <select id="ev-o2">
+      <option value="">— выберите —</option>
+      <option value="a">Компания, у которой мы на штате</option>
+      <option value="b">Аутсорсер — штрафы и пени по договору несёт он</option>
+      <option value="c">Директор, как всегда</option>
+    </select>
+    <button class="btn" onclick="checkSel('o2','b','Верно! По п. 4.2 ответственность за ошибки несёт аутсорсер.')">Проверить</button>
+    <div class="hint" id="h-o2">Перечитайте пункт 4.2 договора: там всё написано о штрафах и пенях.</div>
+    <div class="evidence" id="e-o2">📌 <b>Улика изъята:</b> за ошибки в декларации платит аутсорсер, а не фирма!</div>
+  </div>
+
+  <div class="card"><b>Подготовка к защите.</b> Запишите 3 аргумента в пользу аутсорсинга.</div>
+  <label>Аргумент 1</label><textarea id="arg-o1" placeholder="Например: не платим отпускные и больничные"></textarea>
+  <label>Аргумент 2</label><textarea id="arg-o2" placeholder="Например: целая команда специалистов за цену одного"></textarea>
+  <label>Аргумент 3</label><textarea id="arg-o3" placeholder="Например: штрафы за ошибки — по договору на аутсорсере"></textarea>
+
+  <button class="btn" onclick="goToCourt('out')">⚖ В зал суда</button>
+  <button class="btn dark" onclick="show('scr-folders')">⬅ К папкам</button>
+</div>
+
+<!-- ЭКРАН: ПАПКА ПРИСЯЖНЫХ -->
+<div id="scr-jury" class="screen">
+  <h2>📁 Папка № 3 — присяжные</h2>
+  <div class="card"><b>Ваша задача.</b> Изучите материалы дела (могу вернуться к папкам адвокатов по кнопке ниже — просто посмотреть их расчёты) и заготовьте 3 каверзных вопроса. Ваши вопросы могут переубедить всю группу.</div>
+  <label>Каверзный вопрос № 1</label><textarea id="q1" placeholder="Например: а если фирма вырастет в два раза — что станет с затратами?"></textarea>
+  <label>Каверзный вопрос № 2</label><textarea id="q2" placeholder="Например: а если главбух уволится посреди отчётности?"></textarea>
+  <label>Каверзный вопрос № 3</label><textarea id="q3" placeholder="Например: а если аутсорсер ошибётся в декларации — кто платит штраф?"></textarea>
+  <button class="btn" onclick="goToCourt('jury')">⚖ В зал суда</button>
+  <button class="btn dark" onclick="show('scr-folders')">⬅ К папкам</button>
+</div>
+
+<!-- ЭКРАН: СУД -->
+<div id="scr-court" class="screen">
+  <h2>⚖ Заседание суда</h2>
+  <div class="card">
+    <b>Порядок заседания:</b>
+    <p>1. Выступление адвокатов «ШТАТ» — до 3 минут (каждый говорит сам)</p>
+    <p>2. Выступление адвокатов «АУТСОРСИНГ» — до 3 минут</p>
+    <p>3. Присяжные задают по 2 вопроса каждой стороне</p>
+    <p>4. Голосование и оглашение вердикта</p>
+  </div>
+  <div class="timer" id="timer">03:00</div>
+  <div style="text-align:center">
+    <button class="btn" id="tbtn" onclick="startTimer()">▶ Запустить таймер</button>
+  </div>
+  <div class="card"><b>Голосование присяжных</b>
+    <div style="text-align:center">
+      <button class="btn dark" onclick="vote('shtat')"> за ШТАТ: <span id="v-s">0</span></button>
+      <button class="btn dark" onclick="vote('out')"> за АУТСОРСИНГ: <span id="v-o">0</span></button>
+    </div>
+  </div>
+  <div style="text-align:center"><button class="btn red" onclick="show('scr-verdict')">📜 К карточке вердикта</button></div>
+</div>
+
+<!-- ЭКРАН: ВЕРДИКТ -->
+<div id="scr-verdict" class="screen">
+  <h2>Вердикт присяжных</h2>
+  <p class="small">Экономический вердикт команды аудиторов</p>
+  <div class="card">
+    <label>Команда</label><input type="text" id="team" placeholder="Название команды">
+    <label>Вердикт — кого оправдываем?</label>
+    <div style="text-align:center">
+      <button class="pill" id="pv-shtat" onclick="pickVerdict('ШТАТ')">ШТАТ</button>
+      <button class="pill" id="pv-out" onclick="pickVerdict('АУТСОРСИНГ')">АУТСОРСИНГ</button>
+    </div>
+    <label>Полная стоимость — руб./мес, только число</label><input type="number" id="cost" placeholder="Например: 12400">
+    <label>Главная улика — какую скрытую статью директор чуть не упустил?</label><textarea id="ev" placeholder="Одна фраза"></textarea>
+    <label>Совет директору — одно предложение</label><textarea id="adv" placeholder="Одно предложение"></textarea>
+    <div style="text-align:center"><button class="btn red" onclick="announce()">⚖ ОГЛАСИТЬ ВЕРДИКТ</button></div>
+  </div>
+
+  <div class="card" id="finalcard" style="display:none">
+    <div class="stamp" id="stamp">СОГЛАСОВАНО</div>
+    <h2 style="text-align:center">ЭКОНОМИЧЕСКИЙ ВЕРДИКТ</h2>
+    <p id="fc-text" style="line-height:1.7"></p>
+    <div style="text-align:center">
+      <button class="btn dark" onclick="copyText()">📋 Скопировать текст</button>
+      <button class="btn" onclick="sendCloud()">☁ Отправить в общую базу</button>
+      <button class="btn dark" onclick="loadCloud()">🔄 Обновить базу вердиктов</button>
+    </div>
+    <p class="small" id="cloud-msg" style="text-align:center;margin-top:6px"></p>
+  </div>
+
+  <div class="card"><b>Оглашённые вердикты</b> (по всем устройствам)<div class="verdicts-list" id="vlist"><span class="small">Пока пусто — отправьте первый вердикт или нажмите «Обновить».</span></div></div>
+  <div style="text-align:center"><button class="btn dark" onclick="newCase()">🔄 Начать новое расследование</button></div>
+</div>
+
+<!-- МОДАЛКА ПРАВИЛ -->
+<div class="modal" id="rules"><div class="card">
+  <h2>📋 Правила игры</h2>
+  <p><b>1. Роли.</b> Двое — адвокаты «Штат», двое — адвокаты «Аутсорсинг», двое — присяжные. Каждый открывает СВОЮ папку на своём устройстве.</p>
+  <p style="margin-top:8px"><b>2. Подготовка (15–20 мин).</b> Адвокаты собирают улики (файл сам проверяет расчёты) и пишут 3 аргумента. Присяжные готовят 3 каверзных вопроса.</p>
+  <p style="margin-top:8px"><b>3. Суд (10 мин).</b> Выступление «Штат» — 3 мин, «Аутсорсинг» — 3 мин (судья с молотком следит за временем!), вопросы присяжных — по 2 каждой стороне.</p>
+  <p style="margin-top:8px"><b>4. Вердикт.</b> Голосование. Заполняете карточку вердикта и отправляете в общую базу.</p>
+  <p style="margin-top:8px"><b>Молоток судьи:</b> выступили дольше 3 минут — удар молотка и слово отбирается 🙂</p>
+  <div style="text-align:center"><button class="btn" onclick="closeRules()">Понятно!</button></div>
+</div></div>
+
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzqzfL_YurNE2M3CDjg1VHvCd1RmtVMQS2oOmc7Ps3u5ppISbEtYTmIooHKL18TsL6m/exec";
+
+let S = {
+  folder: null,
+  ev: {s1:false,s2:false,s3:false,o1:false,o2:false},
+  args: {s1:"",s2:"",s3:"",o1:"",o2:"",o3:""},
+  q: {q1:"",q2:"",q3:""},
+  vS:0, vO:0, verdict:null, announced:false, card:null
+};
+
+function save(){ try{localStorage.setItem('delo2026buh', JSON.stringify(S));}catch(e){} }
+function load(){
+  try{ const raw = localStorage.getItem('delo2026buh');
+    if(raw){ const d=JSON.parse(raw); S=Object.assign(S,d);
+      for(const k in S.ev){ if(S.ev[k]) revealEv(k); }
+      for(const k in S.args){ const el=document.getElementById('arg-'+k); if(el) el.value=S.args[k]; }
+      for(const k in S.q){ const el=document.getElementById(k); if(el) el.value=S.q[k]; }
+      document.getElementById('v-s').textContent=S.vS; document.getElementById('v-o').textContent=S.vO;
+      if(S.announced && S.card){ renderCard(); }
+      if(S.folder){ show('scr-'+S.folder); return; }
+    }
+  }catch(e){}
+}
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function openFolder(f){ S.folder=f; save(); show('scr-'+f); }
+function showRules(){ document.getElementById('rules').classList.add('show'); }
+function closeRules(){ document.getElementById('rules').classList.remove('show'); }
+
+function revealEv(k){ const e=document.getElementById('e-'+k); if(e) e.classList.add('show'); }
+function evDone(p){ return ['s1','s2','s3'].filter(k=>S.ev[k]).length + ['o1','o2'].filter(k=>S.ev[k]).length; }
+function updCnt(id,pref,keys){
+  document.getElementById(id).textContent = keys.filter(k=>S.ev[k]).length;
+}
+function checkNum(k,ans,msg){
+  const v = document.getElementById('ev-'+k).value.replace(/\s/g,'');
+  if(v==='' ){ flash('h-'+k); return; }
+  if(Number(v)===ans){ S.ev[k]=true; save(); revealEv(k); flashOk('e-'+k);
+    updCnt('shtat-cnt','',[]); document.getElementById('shtat-cnt').textContent=['s1','s2','s3'].filter(x=>S.ev[x]).length;
+    document.getElementById('out-cnt').textContent=['o1','o2'].filter(x=>S.ev[x]).length;
+    alert(msg); } else flash('h-'+k);
+}
+function checkSel(k,ans,msg){
+  const v=document.getElementById('ev-'+k).value;
+  if(!v){ flash('h-'+k); return; }
+  if(v===ans){ S.ev[k]=true; save(); revealEv(k);
+    document.getElementById('out-cnt').textContent=['o1','o2'].filter(x=>S.ev[x]).length; alert(msg); }
+  else flash('h-'+k);
+}
+function flash(id){ const h=document.getElementById(id); if(!h)return; h.classList.add('show'); setTimeout(()=>h.classList.remove('show'),2500); }
+function flashOk(id){ const h=document.getElementById(id); if(!h)return; h.classList.remove('show'); void h.offsetWidth; h.classList.add('show'); }
+
+// сохранить аргументы и вопросы при вводе
+document.querySelectorAll('textarea').forEach(t=>t.addEventListener('input',function(){
+  if(this.id.startsWith('arg-')){ S.args[this.id.slice(4)]=this.value; }
+  else if(['q1','q2','q3'].includes(this.id)){ S.q[this.id]=this.value; }
+  save();
+}));
+
+// === ГЛАВНАЯ ПРОВЕРКА ПЕРЕДА СУДОМ ===
+// Кнопка всегда активна; валидация на клике — так кнопка не может «зависнуть».
+function goToCourt(from){
+  if(from==='shtat'){
+    const n=['s1','s2','s3'].filter(k=>S.ev[k]).length;
+    const a=['arg-s1','arg-s2','arg-s3'].filter(id=>document.getElementById(id).value.trim().length>3).length;
+    if(n<3){ alert('Сначала соберите все 3 улики! Найдено: '+n+' из 3.'); return; }
+    if(a<3){ alert('Запишите все 3 аргумента в защиту штата (не короче пары слов).'); return; }
+  }
+  if(from==='out'){
+    const n=['o1','o2'].filter(k=>S.ev[k]).length;
+    const a=['arg-o1','arg-o2','arg-o3'].filter(id=>document.getElementById(id).value.trim().length>3).length;
+    if(n<2){ alert('Сначала соберите обе улики! Найдено: '+n+' из 2.'); return; }
+    if(a<3){ alert('Запишите все 3 аргумента в пользу аутсорсинга.'); return; }
+  }
+  if(from==='jury'){
+    const q=['q1','q2','q3'].filter(id=>document.getElementById(id).value.trim().length>3).length;
+    if(q<3){ alert('Заготовьте все 3 вопроса присяжных. Готово: '+q+' из 3.'); return; }
+  }
+  S.folder='court'; save(); show('scr-court');
+}
+
+// Таймер
+let tId=null, tLeft=180;
+function startTimer(){
+  if(tId) return;
+  document.getElementById('tbtn').disabled=true;
+  tId=setInterval(()=>{
+    tLeft--;
+    const m=String(Math.floor(tLeft/60)).padStart(2,'0'), s=String(tLeft%60).padStart(2,'0');
+    document.getElementById('timer').textContent=m+':'+s;
+    if(tLeft<=0){ clearInterval(tId); tId=null; document.getElementById('tbtn').disabled=false;
+      tLeft=180; alert('🔨 МОЛОТОК СУДЬИ! Время выступления вышло — слово отбирается!'); }
+  },1000);
+}
+function vote(side){ if(side==='shtat'){S.vS++;} else {S.vO++;} save();
+  document.getElementById('v-s').textContent=S.vS; document.getElementById('v-o').textContent=S.vO; }
+
+function pickVerdict(v){
+  S.verdict=v; save();
+  document.getElementById('pv-shtat').classList.toggle('sel', v==='ШТАТ');
+  document.getElementById('pv-out').classList.toggle('sel', v==='АУТСОРСИНГ');
+}
+
+function announce(){
+  const team=document.getElementById('team').value.trim();
+  const cost=document.getElementById('cost').value.trim();
+  const ev=document.getElementById('ev').value.trim();
+  const adv=document.getElementById('adv').value.trim();
+  if(!team){ alert('Напишите название команды'); return; }
+  if(!S.verdict){ alert('Выберите вердикт: ШТАТ или АУТСОРСИНГ'); return; }
+  if(!cost){ alert('Укажите полную стоимость (руб./мес)'); return; }
+  if(ev.length<5){ alert('Укажите главную улику'); return; }
+  if(adv.length<5){ alert('Напишите совет директору'); return; }
+  S.card={team,verdict:S.verdict,cost,ev,adv}; S.announced=true; save();
+  renderCard();
+}
+function renderCard(){
+  document.getElementById('finalcard').style.display='block';
+  document.getElementById('stamp').classList.add('show');
+  const c=S.card;
+  document.getElementById('fc-text').innerHTML =
+    'ПРИГОВОР: УЧЁТ ВЕДЁМ <b>'+c.verdict+'</b><br>'+
+    '<b>Команда:</b> '+esc(c.team)+'<br>'+
+    '<b>Полная стоимость:</b> '+esc(c.cost)+' руб./мес<br>'+
+    '<b>Главная улика:</b> '+esc(c.ev)+'<br>'+
+    '<b>Совет директору:</b> '+esc(c.adv);
+  document.getElementById('finalcard').scrollIntoView({behavior:'smooth'});
+}
+function esc(t){ const d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
+
+function copyText(){
+  const c=S.card; if(!c){ alert('Сначала огласите вердикт'); return; }
+  const txt='ДЕЛО № 2026-БУХ · Вердикт\nКоманда: '+c.team+'\nВердикт: '+c.verdict+
+    '\nПолная стоимость: '+c.cost+' руб./мес\nГлавная улика: '+c.ev+'\nСовет директору: '+c.adv;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(()=>alert('Текст скопирован — вставьте в форму!'),()=>fallbackCopy(txt));
+  } else fallbackCopy(txt);
+}
+function fallbackCopy(txt){
+  const ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta);
+  ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+  alert('Текст скопирован — вставьте в форму!');
+}
+
+function sendCloud(){
+  if(!S.card){ alert('Сначала огласите вердикт'); return; }
+  const msg=document.getElementById('cloud-msg');
+  msg.textContent='Отправляю...';
+  fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify({team:S.card.team,verdict:S.card.verdict,cost:S.card.cost,ev:S.card.ev,adv:S.card.adv})})
+  .then(()=>{ msg.textContent='✔ Вердикт отправлен в общую базу!'; })
+  .catch(()=>{ msg.textContent='⚠ Не удалось отправить. Скопируйте текст и вставьте в Яндекс.Форму.'; });
+}
+
+function loadCloud(){
+  const list=document.getElementById('vlist');
+  list.innerHTML='<span class="small">Загружаю...</span>';
+  fetch(SCRIPT_URL+'?t='+Date.now()).then(r=>r.json()).then(data=>{
+    if(!Array.isArray(data)||data.length<2){ list.innerHTML='<span class="small">Пока нет вердиктов в базе.</span>'; return; }
+    list.innerHTML='';
+    data.slice(1).reverse().forEach(r=>{
+      const d=document.createElement('div'); d.className='vrow';
+      d.innerHTML='<b>'+esc(r[1])+'</b> — '+esc(r[2])+', '+esc(r[3])+' руб./мес · <i>'+esc(r[4])+'</i><br><span class="small">'+esc(r[5]||'')+'</span>';
+      list.appendChild(d);
+    });
+  }).catch(()=>{ list.innerHTML='<span class="small">⚠ Не удалось получить базу. Откройте Google Таблицу напрямую — вердикты все там.</span>'; });
+}
+
+function newCase(){
+  if(!confirm('Начать новое расследование? Прогресс папок обнулится (вердикты в общей базе останутся).')) return;
+  S={folder:null,ev:{s1:false,s2:false,s3:false,o1:false,o2:false},args:{s1:'',s2:'',s3:'',o1:'',o2:'',o3:''},q:{q1:'',q2:'',q3:''},vS:0,vO:0,verdict:null,announced:false,card:null};
+  save(); location.reload();
+}
+
+load();
+</script>
+</body>
+</html>
